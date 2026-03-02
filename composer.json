@@ -1,0 +1,27 @@
+{
+    "name": "hmh/magento2-wishlist-price-watch-messaging",
+    "description": "Magento 2 module to process wishlist price-drop events and send notifications via internal message and/or email.",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "proprietary"
+    ],
+    "require": {
+        "php": ">=8.1",
+        "magento/framework": "*",
+        "magento/module-catalog": "*",
+        "magento/module-customer": "*",
+        "magento/module-email": "*",
+        "magento/module-wishlist": "*",
+        "hmh/module-wishlist-price-watch": "*",
+        "hmh/module-internal-message": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Hmh\\WishlistPriceWatchMessaging\\": ""
+        }
+    }
+}

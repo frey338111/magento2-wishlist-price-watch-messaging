@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Hmh_WishlistPriceWatchMessaging">
+        <sequence>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_Customer"/>
+            <module name="Magento_Email"/>
+            <module name="Magento_Wishlist"/>
+            <module name="Hmh_WishlistPriceWatch"/>
+            <module name="Hmh_InternalMessage"/>
+        </sequence>
+    </module>
+</config>

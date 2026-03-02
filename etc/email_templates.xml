@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="hmh_wishlist_price_drop_email_template"
+              label="HMH Wishlist Price Drop Notification"
+              file="wishlist_price_drop_notification.html"
+              type="html"
+              module="Hmh_WishlistPriceWatchMessaging"
+              area="frontend"/>
+</config>
+

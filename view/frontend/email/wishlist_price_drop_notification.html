@@ -1,0 +1,27 @@
+<!--@subject {{trans "Your wishlist item price has dropped"}} @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var product_name":"Product Name",
+"var drop_percentage":"Drop Percentage",
+"var product_url":"Product URL"
+} @-->
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#ffffff;font-family:Arial,Helvetica,sans-serif;color:#333333;">
+    <tr>
+        <td style="padding:24px 24px 12px 24px;font-size:16px;line-height:24px;">
+            {{trans "Hello %customer_name," customer_name=$customer_name}}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:0 24px 12px 24px;font-size:15px;line-height:24px;">
+            {{trans "Good news — %product_name from your wishlist has dropped by %drop_percentage%%." product_name=$product_name drop_percentage=$drop_percentage}}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:0 24px 24px 24px;font-size:15px;line-height:24px;">
+            {{trans "Click here to view product:"}}
+            <a href="{{var product_url}}" target="_blank" rel="noopener noreferrer" style="color:#1979c3;text-decoration:underline;">
+                {{trans "View Product"}}
+            </a>
+        </td>
+    </tr>
+</table>
