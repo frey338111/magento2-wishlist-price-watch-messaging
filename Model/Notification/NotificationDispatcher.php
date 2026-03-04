@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace Hmh\WishlistPriceWatchMessaging\Model\Notification;
 
 use Hmh\WishlistPriceWatchMessaging\Model\Config\ConfigProvider;
-use Hmh\WishlistPriceWatchMessaging\Model\Config\Source\NotificationType;
-use Hmh\WishlistPriceWatchMessaging\Model\Notification\Strategy\EmailNotificationStrategy;
-use Hmh\WishlistPriceWatchMessaging\Model\Notification\Strategy\InternalMessageNotificationStrategy;
 use Hmh\WishlistPriceWatchMessaging\Model\Notification\Strategy\NotificationStrategyInterface;
 use Psr\Log\LoggerInterface;
 
@@ -14,9 +11,8 @@ class NotificationDispatcher
 {
     public function __construct(
         private readonly ConfigProvider $configProvider,
-        private readonly InternalMessageNotificationStrategy $internalMessageStrategy,
-        private readonly EmailNotificationStrategy $emailStrategy,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly array $notificationStrategies
     ) {
     }
 
@@ -27,15 +23,18 @@ class NotificationDispatcher
             return;
         }
 
-        $notificationType = $this->configProvider->getNotificationType($storeId);
-        foreach ($this->resolveStrategies($notificationType) as $strategy) {
+        $notificationTypes = $this->configProvider->getNotificationTypes($storeId);
+        $strategies = $this->resolveStrategies($notificationTypes);
+
+        foreach ($strategies as $strategyCode => $strategy) {
             try {
                 $strategy->notify($notificationData);
             } catch (\Throwable $exception) {
                 $this->logger->error(
                     'Failed to execute notification strategy.',
                     [
-                        'notification_type' => $notificationType,
+                        'notification_type' => $notificationTypes,
+                        'strategy_code' => $strategyCode,
                         'customer_id' => $notificationData->getCustomerId(),
                         'store_id' => $storeId,
                         'exception' => $exception->getMessage(),
@@ -45,16 +44,29 @@ class NotificationDispatcher
         }
     }
 
-    /**
-     * @return NotificationStrategyInterface[]
-     */
-    private function resolveStrategies(string $notificationType): array
+    public function getNotificationStrategiesCode(): array
     {
-        return match ($notificationType) {
-            NotificationType::INTERNAL_MESSAGE => [$this->internalMessageStrategy],
-            NotificationType::EMAIL => [$this->emailStrategy],
-            NotificationType::BOTH => [$this->internalMessageStrategy, $this->emailStrategy],
-            default => [$this->internalMessageStrategy],
-        };
+        return array_keys($this->notificationStrategies);
+    }
+
+    /**
+     * @param string[] $notificationTypes
+     * @return array<string, NotificationStrategyInterface>
+     */
+    private function resolveStrategies(array $notificationTypes): array
+    {
+        $strategies = [];
+        foreach ($notificationTypes as $notificationType) {
+            if (
+                !isset($this->notificationStrategies[$notificationType])
+                || !$this->notificationStrategies[$notificationType] instanceof NotificationStrategyInterface
+            ) {
+                continue;
+            }
+            $strategy = $this->notificationStrategies[$notificationType];
+            $strategies[$notificationType] = $strategy;
+        }
+
+        return $strategies;
     }
 }

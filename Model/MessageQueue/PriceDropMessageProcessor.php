@@ -100,7 +100,7 @@ class PriceDropMessageProcessor
                     'wishlist_item_id' => $wishlistItemId,
                     'new_price' => $newPrice,
                     'current_final_price' => $currentFinalPrice,
-                    'exception' => $exception->getMessage(),
+                    'exception' => $exception->getMessage()
                 ]
             );
         }

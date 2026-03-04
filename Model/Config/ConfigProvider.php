@@ -27,7 +27,10 @@ class ConfigProvider
         );
     }
 
-    public function getNotificationType(?int $storeId = null): string
+    /**
+     * @return string[]
+     */
+    public function getNotificationTypes(?int $storeId = null): array
     {
         $value = (string)$this->scopeConfig->getValue(
             self::XML_PATH_NOTIFICATION_TYPE,
@@ -35,6 +38,11 @@ class ConfigProvider
             $storeId
         );
 
-        return $value !== '' ? $value : NotificationType::INTERNAL_MESSAGE;
+        if ($value === '') {
+            return [NotificationType::INTERNAL_MESSAGE];
+        }
+
+        $notificationTypes = array_values(array_filter(array_map('trim', explode(',', $value))));
+        return $notificationTypes !== [] ? $notificationTypes : [NotificationType::INTERNAL_MESSAGE];
     }
 }

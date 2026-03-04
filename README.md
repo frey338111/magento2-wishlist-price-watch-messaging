@@ -9,7 +9,7 @@ Magento 2 module that listens for product price drops and dispatches customer no
 - Supports notification strategy by config:
   - Internal message
   - Email
-  - Both
+- Supports multiple notification strategies via Admin multiselect.
 - Creates internal messages through `Hmh_InternalMessage`.
 - Sends transactional emails using template `hmh_wishlist_price_drop_email_template`.
 - Updates `updated_price` in `hmh_wishlist_price_watch` after successful drop handling.
@@ -29,6 +29,31 @@ Config nodes:
 
 - `hmh_wishlistpricewatchmessaging/general/enabled`
 - `hmh_wishlistpricewatchmessaging/general/notification_type`
+
+## Add New Notification Strategy
+
+To add a new notification channel, register it in DI and it will appear in Admin `notification_type` multiselect automatically.
+
+1. Create a strategy class implementing:
+   - `Hmh\WishlistPriceWatchMessaging\Model\Notification\Strategy\NotificationStrategyInterface`
+2. Add strategy mapping in:
+   - `app/code/Hmh/WishlistPriceWatchMessaging/etc/di.xml`
+
+Example:
+
+```xml
+<type name="Hmh\WishlistPriceWatchMessaging\Model\Notification\NotificationDispatcher">
+    <arguments>
+        <argument name="notificationStrategies" xsi:type="array">
+            <item name="internal_message" xsi:type="object">Hmh\WishlistPriceWatchMessaging\Model\Notification\Strategy\InternalMessageNotificationStrategy</item>
+            <item name="email_notification" xsi:type="object">Hmh\WishlistPriceWatchMessaging\Model\Notification\Strategy\EmailNotificationStrategy</item>
+            <item name="sms_notification" xsi:type="object">Vendor\Module\Model\Notification\Strategy\SmsNotificationStrategy</item>
+        </argument>
+    </arguments>
+</type>
+```
+
+`item name` is the strategy code stored in config and used by the dispatcher.
 
 ## Email Template
 

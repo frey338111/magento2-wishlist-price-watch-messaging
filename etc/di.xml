@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Hmh\WishlistPriceWatchMessaging\Model\Notification\NotificationDispatcher">
+        <arguments>
+            <argument name="notificationStrategies" xsi:type="array">
+                <item name="internal_message" xsi:type="object">Hmh\WishlistPriceWatchMessaging\Model\Notification\Strategy\InternalMessageNotificationStrategy</item>
+                <item name="email_notification" xsi:type="object">Hmh\WishlistPriceWatchMessaging\Model\Notification\Strategy\EmailNotificationStrategy</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
+
